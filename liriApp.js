@@ -58,7 +58,7 @@ function runLIRI(firstCommand, secondCommand) {
     default:
       console.error(`
           I'M SORRY I DON'T UNDERSTAND WHAT YOU ENTERED, DO THIS
-          *********************************************
+          ******************************************************
           node liri concert-this 'artist or band name'
           node liri spotify-this 'song name goes here'
           node liri movie-this 'movie name goes here'
@@ -67,12 +67,32 @@ function runLIRI(firstCommand, secondCommand) {
   }
 }
 
+function printHeader(number){
+	var divider = "*****************************************************************";
+	if(number){
+		console.log(`${divider} [${number < 10 ? "0"+number : number }]`);
+	} else {
+		console.log(`${divider} [//]`);
+	}
+}
+
 function whoIsYourDaddy() {
 
   fs.readFile("./heyliri.txt", "utf8", function (err, data) {
     if (err) {
       return console.log(err);
     }
+     // Break the string down by comma separation and store the contents into the output array.
+	  let output = data.split(";");
+	  //console.log('output',output);
+	  let random = Math.floor(Math.random()*output.length);
+	  //console.log('random', random);
+	  let entry = output[random].split(",");
+	  let firstCommand = entry[0].trim();
+	  let secondCommand = entry[1].trim().replace(/\"/g,'');
+	  printHeader();
+	  console.log(`loads a heyliri entry <node liri ${firstCommand} "${secondCommand}">`);
+	  runLIRI(command,commandValue);
   });
 
 }
@@ -89,12 +109,12 @@ function spotifyThis(input) {
     }
 
       let results = data.tracks.items;
-     
+      printHeader();
       console.log(`Results for <${input.toUpperCase()}>`)
       for (var i = 0; i < results.length; i++) {
       let album = results[i].album;
 
-      // printHeader(i + 1);
+      printHeader(i + 1);
       console.log(`Artist(s): ${album.artists[0].name}`);
       console.log(`Title: ${results[i].name}`);
       console.log(`Album: ${album.name}`);
