@@ -41,19 +41,19 @@ function runLIRI(firstCommand, secondCommand) {
   switch (firstCommand) {
     case "concert-this":
       concertThis(secondCommand);
-      //add commandline dialog
+      logger(firstCommand, secondCommand);
       break;
     case "spotify-this-song":
       spotifyThis(secondCommand);
-      //add commandline dialog
+      logger(firstCommand, secondCommand);
       break;
     case "movie-this":
       omdbThis(secondCommand);
-      //add commandline dialog
+      logger(firstCommand, secondCommand);
       break;
     case "who-is-your-daddy":
       whoIsYourDaddy();
-      //add commandline dialog
+      logger(firstCommand, secondCommand);
       break;
     default:
       console.error(`
