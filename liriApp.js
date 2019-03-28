@@ -67,14 +67,16 @@ function runLIRI(firstCommand, secondCommand) {
   }
 }
 
-function printHeader(number){
-	var divider = "*****************************************************************";
-	if(number){
-		console.log(`${divider} [${number < 10 ? "0"+number : number }]`);
-	} else {
-		console.log(`${divider} [//]`);
-	}
+function printHeader(number) {
+  var divider = "*****************************************************************";
+  if (number) {
+    console.log(`${divider} [${number < 10 ? "0"+number : number }]`);
+  } else {
+    console.log(`${divider} [//]`);
+  }
 }
+
+
 
 function whoIsYourDaddy() {
 
@@ -82,36 +84,41 @@ function whoIsYourDaddy() {
     if (err) {
       return console.log(err);
     }
-     // Break the string down by comma separation and store the contents into the output array.
-	  let output = data.split(";");
-	  //console.log('output',output);
-	  let random = Math.floor(Math.random()*output.length);
-	  //console.log('random', random);
-	  let entry = output[random].split(",");
-	  let firstCommand = entry[0].trim();
-	  let secondCommand = entry[1].trim().replace(/\"/g,'');
-	  printHeader();
-	  console.log(`loads a heyliri entry <node liri ${firstCommand} "${secondCommand}">`);
-	  runLIRI(command,commandValue);
+    // Break the string down by comma separation and store the contents into the output array.
+    let output = data.split(";");
+    //console.log('output',output);
+    let random = Math.floor(Math.random() * output.length);
+    //console.log('random', random);
+    let entry = output[random].split(",");
+    let firstCommand = entry[0].trim();
+    let secondCommand = entry[1].trim().replace(/\"/g, '');
+    printHeader();
+    console.log(`loads a heyliri entry <node liri ${firstCommand} "${secondCommand}">`);
+    runLIRI(firstCommand, secondCommand);
   });
 
 }
 
+
+
+// Spotify search function
 function spotifyThis(input) {
 
   let spotifyResponse = input.trim().replace(/\s/g, '+');
 
   spotify.search({
-    type: 'track', query: spotifyResponse}, function (err, data) {
-    
+    type: 'track',
+    query: spotifyResponse
+  }, function (err, data) {
+
     if (err) {
       return console.log('Error occurred: ' + err);
     }
 
-      let results = data.tracks.items;
-      printHeader();
-      console.log(`Results for <${input.toUpperCase()}>`)
-      for (var i = 0; i < results.length; i++) {
+    let results = data.tracks.items;
+    printHeader();
+    console.log(`Results for <${input.toUpperCase()}>`)
+    for (var i = 0; i < results.length; i++) {
       let album = results[i].album;
 
       printHeader(i + 1);
@@ -120,9 +127,51 @@ function spotifyThis(input) {
       console.log(`Album: ${album.name}`);
       console.log(`Sample URL: ${album.external_urls.spotify}`);
     }
-  
+    printHeader();
+
   });
-} {
+
+} else {
+
   console.error("Incorrect input for spotify-this-song. So you get Hanson's 'MmmBop'");
   spotifyThis("MmmBop by Hanson");
+
+}
+
+// Bands in Town Search Function
+
+function concertThis(input) {
+
+  if (input) {
+    let artist = input.trim();
+    let urlQuery = "https://rest.bandsintown.com/artists" + artist + "/events?app_id=codingbootcamp";
+
+    axios.get(urlQuery)
+      .then((response) => {
+        let results = response.data;
+        printHeader();
+        console.log(`Results for <${artist.toUpperCase()}>`);
+        for (var i = 0; i < results.length; i ++) {
+          let venue = results[i].venue;
+          printHeader(i+1);
+          console.log ("This is the Venue: "+ venue.name);
+          
+          console.log ("This is the Location of the Venue: "+ venue.city+", "+venue.country);
+          
+          console.log ("Date of Event: "+ moment(results[i].datetime).format('mm/dd/yyyy'));
+          
+        }
+
+        printHeader();
+
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+      .then(function () {
+
+      });
+    } else {
+      console.error("Incorrect input for concert-this");
+    }
 }
