@@ -3,13 +3,13 @@ require("dotenv").config();
 //Constants We Need to RUN the Application
 const axios = require('axios');
 const moment = require('moment');
-var fs = require("fs");
+let fs = require("fs");
 
 //Spotify API requirements
-var keys = require("./keys.js");
-var Spotify = require('node-spotify-api');
+let keys = require("./keys.js");
+let Spotify = require('node-spotify-api');
 
-var spotify = new Spotify(keys.spotify);
+let spotify = new Spotify(keys.spotify);
 
 
 //Spotify API Validation Test
@@ -23,11 +23,11 @@ var spotify = new Spotify(keys.spotify);
 //   });
 
 //Getting Values for Terminal Interaction and storing in variable for shorthand.
-var userInputs = process.argv;
+let userInputs = process.argv;
 console.log(userInputs);
 
 //Inputs will be stored in two variables for array position 2 and position 3 : we will be using ES6 javascript
-var firstCommand = userInputs[2],
+let firstCommand = userInputs[2],
   secondCommand = userInputs[3];
 console.log("This is the first command " + firstCommand);
 console.log("This is the second command " + secondCommand);
