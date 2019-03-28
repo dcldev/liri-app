@@ -37,4 +37,43 @@ var spotify = new Spotify(keys.spotify);
 
   function runLIRI(firstCommand, secondCommand) {
       
+    switch (firstCommand) {
+      case "concert-this":
+        concertThis(secondCommand);
+        //add commandline dialog
+        break;
+      case "spotify-this-song":
+        spotifyThis(secondCommand);
+        //add commandline dialog
+        break;
+      case "movie-this":
+        omdbThis(secondCommand);
+        //add commandline dialog
+        break;
+      case "who-is-your-daddy":
+        whoIsYourDaddy();
+        //add commandline dialog
+        break;
+      default:
+        console.error( `
+          I'M SORRY I DON'T UNDERSTAND WHAT YOU ENTERED, DO THIS
+          *********************************************
+          node liri concert-this 'artist or band name'
+          node liri spotify-this 'song name goes here'
+          node liri movie-this 'movie name goes here'
+          node liri who-is-your-daddy`);
+          break;
+    }
   }
+
+function whoIsYourDaddy() {
+
+  fs.readFile("./heyliri.txt", "utf8", function(err, data) {
+    if (err){
+      return console.log(err);
+    }
+});
+
+}
+
+function spotifyThis(input)
