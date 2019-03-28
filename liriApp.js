@@ -76,7 +76,21 @@ function printHeader(number) {
   }
 }
 
+function logger(firstCommand, value) {
 
+  var text = `${firstCommand}, "${value}";`;
+
+  fs.appendFile("logs.txt", text, function (err) {
+
+    if (err) {
+      console.log(err);
+    } else {
+
+    }
+
+  });
+  return false;
+}
 
 function whoIsYourDaddy() {
 
@@ -104,38 +118,39 @@ function whoIsYourDaddy() {
 // Spotify search function
 function spotifyThis(input) {
 
-  let spotifyResponse = input.trim().replace(/\s/g, '+');
+  if (input) {
 
-  spotify.search({
-    type: 'track',
-    query: spotifyResponse
-  }, function (err, data) {
+    let spotifyResponse = input.trim().replace(/\s/g, '+');
 
-    if (err) {
-      return console.log('Error occurred: ' + err);
-    }
+    spotify.search({
+      type: 'track',
+      query: spotifyResponse
+    }, function (err, data) {
+      if (err) {
+        return console.log('Error: ' + err);
+      }
 
-    let results = data.tracks.items;
-    printHeader();
-    console.log(`Results for <${input.toUpperCase()}>`)
-    for (var i = 0; i < results.length; i++) {
-      let album = results[i].album;
+      let results = data.tracks.items;
+      printHeader();
+      console.log(`Results for <${input.toUpperCase()}>`)
+      for (var i = 0; i < results.length; i++) {
+        let album = results[i].album;
+        // console.log(results[i]);
+        printHeader(i + 1);
+        console.log(`Artist(s): ${album.artists[0].name}`);
+        console.log(`Title: ${results[i].name}`);
+        console.log(`Album: ${album.name}`);
+        console.log(`Sample URL: ${album.external_urls.spotify}`);
+        printHeader();
+      }
+    });
 
-      printHeader(i + 1);
-      console.log(`Artist(s): ${album.artists[0].name}`);
-      console.log(`Title: ${results[i].name}`);
-      console.log(`Album: ${album.name}`);
-      console.log(`Sample URL: ${album.external_urls.spotify}`);
-    }
-    printHeader();
+  } else {
 
-  });
+    console.error("Incorrect input for spotify-this-song. So you get Hanson's 'MmmBop'");
+    spotifyThis("MmmBop by Hanson");
 
-} else {
-
-  console.error("Incorrect input for spotify-this-song. So you get Hanson's 'MmmBop'");
-  spotifyThis("MmmBop by Hanson");
-
+  }
 }
 
 // Bands in Town Search Function
@@ -144,24 +159,23 @@ function concertThis(input) {
 
   if (input) {
     let artist = input.trim();
-    let urlQuery = "https://rest.bandsintown.com/artists" + artist + "/events?app_id=codingbootcamp";
+    let urlQuery = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
     axios.get(urlQuery)
-      .then((response) => {
+      .then(function (response) {
         let results = response.data;
         printHeader();
         console.log(`Results for <${artist.toUpperCase()}>`);
-        for (var i = 0; i < results.length; i ++) {
+        for (var i = 0; i < results.length; i++) {
           let venue = results[i].venue;
-          printHeader(i+1);
-          console.log ("This is the Venue: "+ venue.name);
-          
-          console.log ("This is the Location of the Venue: "+ venue.city+", "+venue.country);
-          
-          console.log ("Date of Event: "+ moment(results[i].datetime).format('mm/dd/yyyy'));
-          
-        }
+          printHeader(i + 1);
+          console.log("This is the Venue: " + venue.name);
 
+          console.log("This is the Location of the Venue: " + venue.city + ", " + venue.country);
+
+          console.log("Date of Event: " + moment(results[i].datetime).format('MM/DD/YYYY'));
+
+        }
         printHeader();
 
       })
@@ -171,7 +185,7 @@ function concertThis(input) {
       .then(function () {
 
       });
-    } else {
-      console.error("Incorrect input for concert-this");
-    }
+  } else {
+    console.error("Incorrect input for concert-this");
+  }
 }
