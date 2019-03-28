@@ -10,6 +10,8 @@ let keys = require("./keys.js");
 let Spotify = require('node-spotify-api');
 
 let spotify = new Spotify(keys.spotify);
+const omdb = keys.omdbapi;
+console.log("omdb", omdb);
 
 
 //Spotify API Validation Test
@@ -62,7 +64,8 @@ function runLIRI(firstCommand, secondCommand) {
           node liri concert-this 'artist or band name'
           node liri spotify-this 'song name goes here'
           node liri movie-this 'movie name goes here'
-          node liri who-is-your-daddy`);
+          node liri who-is-your-daddy
+          `);
       break;
   }
 }
@@ -113,7 +116,43 @@ function whoIsYourDaddy() {
 
 }
 
+//omdb 
+function omdbThis(input) {
+  if (input) {
+    let movieName = input.trim().replace(/\s/g, '+');
 
+    let queryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey="+omdb;
+
+    axios.get(queryURL).then(
+      function (response) {
+        printHeader();
+        console.log(`Results for <${input.toUpperCase()}>`)
+        printHeader();
+        let result = response.data;
+
+        console.log("Title: " + result.Title);
+        console.log("Year: " + result.Year);
+        for (var i = 0; i < result.Ratings.length; i++) {
+          let rating = result.Ratings[i];
+          if (rating.Source === "Internet Movie Database"){
+            console.log( `IMDB Rating: ${result.Ratings[i].Value}`)
+          }
+          if (rating.Source === "Rotten Tomatoes"){
+            console.log( `${result.Ratings[i].Source} Rating: ${result.Ratings[i].Value}`);
+          }
+        }
+        console.log("Country: " + result.Country);
+        console.log("Language: " + result.Language);
+        console.log("Plot: " + result.Plot);
+        console.log("Actors: " + result.Actors);
+        printHeader();
+      }
+    );
+  } else {
+    console.error("Incorrect input for movie-this. So you get this instead, Meet the Fockers");
+    omdbThis("Meet the Fockers");
+  }
+}
 
 // Spotify search function
 function spotifyThis(input) {
